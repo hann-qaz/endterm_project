@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * REST CONTROLLER for Card operations
- * Demonstrates RESTful API design with Spring Boot
- */
+// REST Controller for managing Cards in Clash Royale API
 @RestController
 @RequestMapping("/api/cards")
 @CrossOrigin(origins = "*")
@@ -34,9 +31,7 @@ public class CardController {
         this.cardFactory = cardFactory;
     }
 
-    /**
-     * GET /api/cards - Get all cards
-     */
+   // GET /api/cards - get all cards
     @GetMapping
     public ResponseEntity<List<CardResponse>> getAllCards() throws DatabaseException {
         List<Card> cards = cardService.getAllCards();
@@ -46,9 +41,7 @@ public class CardController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * GET /api/cards/{id} - Get card by ID
-     */
+    // GET /api/cards/{id} - get card by id
     @GetMapping("/{id}")
     public ResponseEntity<CardResponse> getCardById(@PathVariable int id)
             throws ResourceNotFoundException, DatabaseException {
@@ -56,15 +49,13 @@ public class CardController {
         return ResponseEntity.ok(CardResponse.fromEntity(card));
     }
 
-    /**
-     * POST /api/cards - Create new card
-     * Uses Factory Pattern to create appropriate card type
-     */
+     // POST /api/cards - Create new card
+     // uses factory pattern to create appropriate card type
     @PostMapping
     public ResponseEntity<CardResponse> createCard(@Valid @RequestBody CardRequest request)
             throws InvalidInputException, DatabaseException {
 
-        // FACTORY PATTERN in action
+        // factory pattern to create card based on type
         Card card = cardFactory.createCard(
                 request.getType(),
                 0,
@@ -82,9 +73,8 @@ public class CardController {
         return new ResponseEntity<>(CardResponse.fromEntity(card), HttpStatus.CREATED);
     }
 
-    /**
-     * PUT /api/cards/{id} - Update existing card
-     */
+     // PUT /api/cards/{id} - update card
+
     @PutMapping("/{id}")
     public ResponseEntity<CardResponse> updateCard(
             @PathVariable int id,
@@ -108,9 +98,9 @@ public class CardController {
         return ResponseEntity.ok(CardResponse.fromEntity(card));
     }
 
-    /**
-     * DELETE /api/cards/{id} - Delete card
-     */
+
+     // DELETE /api/cards/{id} - delete card
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCard(@PathVariable int id)
             throws ResourceNotFoundException, DatabaseException {
@@ -118,9 +108,9 @@ public class CardController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * PUT /api/cards/{id}/upgrade - Upgrade card level
-     */
+
+     // PUT /api/cards/{id}/upgrade - upgrade card level
+
     @PutMapping("/{id}/upgrade")
     public ResponseEntity<CardResponse> upgradeCard(@PathVariable int id)
             throws ResourceNotFoundException, DatabaseException, InvalidInputException {
@@ -129,9 +119,9 @@ public class CardController {
         return ResponseEntity.ok(CardResponse.fromEntity(upgraded));
     }
 
-    /**
-     * GET /api/cards/type/{type} - Get cards by type
-     */
+
+    // GET /api/cards/type/{type} - get cards by type
+
     @GetMapping("/type/{type}")
     public ResponseEntity<List<CardResponse>> getCardsByType(@PathVariable String type)
             throws DatabaseException {

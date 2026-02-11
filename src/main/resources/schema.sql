@@ -46,7 +46,7 @@ insert into players (name, level, trophies) values
                                                 ('Batyr', 3, 90);
 
 insert into decks (player_id, deck_name) values
-(1, 'Aggro Deck'),
+(1, 'Agro Deck'),
 (2, 'Control Deck');
 
 insert into cards (name, card_type, rarity, elixir_cost, level, damage, hp, radius, lifetime) values

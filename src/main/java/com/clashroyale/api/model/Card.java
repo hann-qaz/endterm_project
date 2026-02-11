@@ -15,8 +15,8 @@ public abstract class Card extends GameEntity implements Upgradable, Printable {
 
     @Override
     public void validate() throws InvalidInputException {
-        if (name == null) {
-            throw new InvalidInputException("Card name is empty!");
+        if (name == null || name.isEmpty()) {
+            throw new InvalidInputException("Card name cannot be empty!");
         }
         if (elixirCost < 1 || elixirCost > 10) {
             throw new InvalidInputException("Elixir cost must be less than 1 and greater than 10!");

@@ -10,11 +10,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * GLOBAL EXCEPTION HANDLER
- * Centralized exception handling for REST API
- * Returns consistent error responses
- */
+
+//exceptions for REST API
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

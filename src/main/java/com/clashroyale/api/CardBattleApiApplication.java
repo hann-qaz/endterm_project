@@ -8,7 +8,6 @@ public class CardBattleApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CardBattleApiApplication.class, args);
-        System.out.println("🎮 Card Battle API is running on http://localhost:8080");
-        System.out.println(" API Documentation: http://localhost:8080/api");
+        System.out.print("🎮 Card Battle API is running on http://localhost:8080 \n  Open postman and test my api!");
     }
 }

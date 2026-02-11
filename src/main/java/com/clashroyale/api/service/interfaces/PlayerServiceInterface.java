@@ -4,62 +4,25 @@ import com.clashroyale.api.model.Player;
 import com.clashroyale.api.exception.*;
 import java.util.List;
 
-/**
- * Service interface for Player operations
- * Demonstrates: ISP (Interface Segregation Principle)
- *              DIP (Dependency Inversion Principle)
- */
+//demonstrates ISP and DIP
 public interface PlayerServiceInterface {
 
-    /**
-     * Create a new player
-     * @param player Player entity to create
-     * @throws InvalidInputException if player data is invalid
-     * @throws DatabaseException if database operation fails
-     */
+    //create a new player, throws InvalidInputException if player data is wrong
+    // throws DatabaseException if database operation fails
     void createPlayer(Player player) throws InvalidInputException, DatabaseException;
 
-    /**
-     * Get all players
-     * @return List of all players
-     * @throws DatabaseException if database operation fails
-     */
+    //lists all players
     List<Player> getAllPlayers() throws DatabaseException;
 
-    /**
-     * Get player by ID
-     * @param id Player ID
-     * @return Player entity
-     * @throws ResourceNotFoundException if player not found
-     * @throws DatabaseException if database operation fails
-     */
+    //list player by id, throws ResourceNotFoundException if player not found
     Player getPlayerById(int id) throws ResourceNotFoundException, DatabaseException;
 
-    /**
-     * Update existing player
-     * @param id Player ID to update
-     * @param player Updated player data
-     * @throws InvalidInputException if player data is invalid
-     * @throws ResourceNotFoundException if player not found
-     * @throws DatabaseException if database operation fails
-     */
+    //update player by id
     void updatePlayer(int id, Player player) throws InvalidInputException, ResourceNotFoundException, DatabaseException;
 
-    /**
-     * Delete player
-     * @param id Player ID to delete
-     * @throws ResourceNotFoundException if player not found
-     * @throws DatabaseException if database operation fails
-     */
+    //delete player by id
     void deletePlayer(int id) throws ResourceNotFoundException, DatabaseException;
 
-    /**
-     * Add trophies to player
-     * @param playerId Player ID
-     * @param trophies Number of trophies to add
-     * @throws ResourceNotFoundException if player not found
-     * @throws DatabaseException if database operation fails
-     * @throws InvalidInputException if trophies amount is invalid
-     */
-    void addTrophies(int playerId, int trophies) throws ResourceNotFoundException, DatabaseException, InvalidInputException;
+    //add trophies to player
+    void addTrophies(int playerId, int trophies) throws ResourceNotFoundException, DatabaseException;
 }

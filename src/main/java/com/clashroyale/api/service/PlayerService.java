@@ -5,81 +5,74 @@ import com.clashroyale.api.repository.interfaces.CrudRepository;
 import com.clashroyale.api.service.interfaces.PlayerServiceInterface;
 import com.clashroyale.api.exception.*;
 import com.clashroyale.api.patterns.singleton.LoggerService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-/**
- * SERVICE LAYER - Business logic for players
- * Demonstrates: SRP (Single Responsibility - only business logic)
- *              DIP (Dependency Inversion - depends on CrudRepository interface)
- */
+//business logic for players.  demonstrates SRP and DIP
 @Service
 public class PlayerService implements PlayerServiceInterface {
 
     private final CrudRepository<Player> playerRepository;
     private final LoggerService logger = LoggerService.getInstance();
 
-    /**
-     * Constructor injection - DIP in action
-     * Spring automatically injects PlayerRepository implementation
-     */
+    // Demonstrates DIP High-level module Service don't depend on low-level modules Repository
+    // Spring pass implementation of CrudRepository automatically
     @Autowired
     public PlayerService(CrudRepository<Player> playerRepository) {
         this.playerRepository = playerRepository;
     }
 
+    //create player with validation and logging
     @Override
     public void createPlayer(Player player) throws InvalidInputException, DatabaseException {
-        logger.info("Creating player: " + player.getName());
-        player.validate(); // Business rule: validate before saving
-        playerRepository.create(player);
+        logger.info("Creating player... ");
+
+        player.validate(); // business rule: validate before creating
+        playerRepository.create(player); //delegate to repository for database operation
+
         logger.info(" Player created: " + player.getName());
     }
 
+    //list all players with logging
     @Override
     public List<Player> getAllPlayers() throws DatabaseException {
-        logger.info("Fetching all players");
+        logger.info("Showing all players...");
         return playerRepository.getAll();
     }
 
     @Override
     public Player getPlayerById(int id) throws ResourceNotFoundException, DatabaseException {
-        logger.info("Fetching player with ID: " + id);
+        logger.info("Showing player with ID: " + id);
         return playerRepository.getById(id);
     }
 
     @Override
     public void updatePlayer(int id, Player player) throws InvalidInputException, ResourceNotFoundException, DatabaseException {
-        logger.info("Updating player with ID: " + id);
-        player.validate(); // Business rule: validate before updating
+        logger.info("updating player...");
+
+        player.validate(); // business rule: validate before updating
         playerRepository.update(id, player);
+
         logger.info(" Player updated: " + player.getName());
     }
 
     @Override
     public void deletePlayer(int id) throws ResourceNotFoundException, DatabaseException {
-        logger.info("Deleting player with ID: " + id);
+        logger.info("deleting player...");
         playerRepository.delete(id);
-        logger.info(" Player deleted with ID: " + id);
+        logger.info("Player deleted with ID: " + id);
     }
 
     @Override
-    public void addTrophies(int playerId, int trophies) throws ResourceNotFoundException, DatabaseException, InvalidInputException {
-        logger.info("Adding " + trophies + " trophies to player ID: " + playerId);
-
-        // Business rule: cannot add negative trophies
-        if (trophies < 0) {
-            throw new InvalidInputException("Cannot add negative trophies");
-        }
+    public void addTrophies(int playerId, int trophies) throws ResourceNotFoundException, DatabaseException {
+        logger.info("Adding trophies...");
 
         Player player = playerRepository.getById(playerId);
         player.setTrophies(player.getTrophies() + trophies);
         playerRepository.update(playerId, player);
 
         logger.info(" Added " + trophies + " trophies to " + player.getName() +
-                " (Total: " + player.getTrophies() + ")");
+                " Total: " + player.getTrophies());
     }
 }

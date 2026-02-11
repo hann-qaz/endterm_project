@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * REST CONTROLLER for Player operations
- */
+
+ //REST controller for player operations
+
 @RestController
 @RequestMapping("/api/players")
 @CrossOrigin(origins = "*")
@@ -31,9 +31,7 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    /**
-     * GET /api/players - Get all players
-     */
+    // GET /api/players - Get all players
     @GetMapping
     public ResponseEntity<List<PlayerResponse>> getAllPlayers() throws DatabaseException {
         List<Player> players = playerService.getAllPlayers();
@@ -43,9 +41,7 @@ public class PlayerController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * GET /api/players/{id} - Get player by ID
-     */
+    // GET /api/players/{id} - Get player by ID
     @GetMapping("/{id}")
     public ResponseEntity<PlayerResponse> getPlayerById(@PathVariable int id)
             throws ResourceNotFoundException, DatabaseException {
@@ -53,10 +49,8 @@ public class PlayerController {
         return ResponseEntity.ok(PlayerResponse.fromEntity(player));
     }
 
-    /**
-     * POST /api/players - Create new player
-     * Uses Builder Pattern for flexible construction
-     */
+     // POST /api/players - Create new player
+     // Uses Builder Pattern for flexible construction
     @PostMapping
     public ResponseEntity<PlayerResponse> createPlayer(@Valid @RequestBody PlayerRequest request)
             throws InvalidInputException, DatabaseException {
@@ -72,9 +66,7 @@ public class PlayerController {
         return new ResponseEntity<>(PlayerResponse.fromEntity(player), HttpStatus.CREATED);
     }
 
-    /**
-     * PUT /api/players/{id} - Update player
-     */
+     // PUT /api/players/{id} - Update player
     @PutMapping("/{id}")
     public ResponseEntity<PlayerResponse> updatePlayer(
             @PathVariable int id,
@@ -92,9 +84,8 @@ public class PlayerController {
         return ResponseEntity.ok(PlayerResponse.fromEntity(player));
     }
 
-    /**
-     * DELETE /api/players/{id} - Delete player
-     */
+
+    // DELETE /api/players/{id} - Delete player
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePlayer(@PathVariable int id)
             throws ResourceNotFoundException, DatabaseException {
@@ -102,9 +93,7 @@ public class PlayerController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * POST /api/players/{id}/trophies - Add trophies to player
-     */
+     // POST /api/players/{id}/trophies - Add trophies to player
     @PostMapping("/{id}/trophies")
     public ResponseEntity<PlayerResponse> addTrophies(
             @PathVariable int id,

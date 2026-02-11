@@ -6,7 +6,7 @@ package com.clashroyale.api.patterns.singleton;
  */
 public class DatabaseConfig {
 
-    // ✅ Eager initialization
+    // Eager initialization
     private static final DatabaseConfig INSTANCE = new DatabaseConfig();
 
     private String databaseUrl;

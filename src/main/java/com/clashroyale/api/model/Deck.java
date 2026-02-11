@@ -9,7 +9,6 @@ public class Deck {
     private int id;
     private String deckName;
     private List<Card> cards;
-    private static final int MAX_CARDS = 8;
 
     public Deck(int id, String deckName) {
         this.id = id;
@@ -18,8 +17,8 @@ public class Deck {
     }
 
     public void addCard(Card card) throws InvalidInputException {
-        if (cards.size() >= MAX_CARDS) {
-            throw new InvalidInputException("Deck cannot have more than " + MAX_CARDS + " cards");
+        if (cards.size() >= 8) {
+            throw new InvalidInputException("Deck cannot have more than 8 cards");
         }
         if (cards.contains(card)) {
             throw new InvalidInputException("Card already exists in deck");
@@ -34,11 +33,18 @@ public class Deck {
     }
 
     public int getTotalElixirCost() {
-        return cards.stream().mapToInt(Card::getElixirCost).sum();
+        int total = 0;
+        for (Card card : cards) {
+            total += card.getElixirCost();
+        }
+        return total;
     }
 
     public double getAverageElixirCost() {
-        return cards.isEmpty() ? 0 : (double) getTotalElixirCost() / cards.size();
+        if (cards.isEmpty()) {
+            return 0;
+        }
+        return (double) getTotalElixirCost() / 8;
     }
 
     // Getters and Setters

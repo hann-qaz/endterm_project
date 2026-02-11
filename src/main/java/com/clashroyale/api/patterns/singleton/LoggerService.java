@@ -3,13 +3,10 @@ package com.clashroyale.api.patterns.singleton;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * SINGLETON PATTERN - Simple Logger
- * Thread-safe singleton implementation
- */
+//SINGLETON PATTERN - Simple Logger
 public class LoggerService {
 
-    // ✅ Eager initialization - thread-safe без synchronized
+    // Eager initialization - thread-safe без synchronized
     private static final LoggerService INSTANCE = new LoggerService();
 
     private static final DateTimeFormatter FORMATTER =

@@ -21,13 +21,13 @@ public class Player extends GameEntity {
     @Override
     public void validate() throws InvalidInputException {
         if (name == null) {
-            throw new InvalidInputException("Player name cannot be empty");
+            throw new InvalidInputException("Name cannot be empty");
         }
         if (level < 1) {
-            throw new InvalidInputException("Player level must be at least 1");
+            throw new InvalidInputException("Level can't be less than 1");
         }
         if (trophies < 0) {
-            throw new InvalidInputException("Trophies cannot be negative");
+            throw new InvalidInputException("Trophies can't be negative");
         }
     }
 

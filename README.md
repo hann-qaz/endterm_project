@@ -183,6 +183,24 @@ Decks <-> Cards: Many-to-Many (using deck_cards)
 ===============================================================================
 
 ## System Architecture
+┌───────┐  
+│  Controller │ ---> REST endpoints, HTTP handling  
+└───┬───┘   
+depends on  
+ㅤㅤㅤ↓   
+┌─────┐   
+│   Service    │ --->  Business logic, validation  
+└──┬──┘   
+depends on  
+ㅤ ㅤ↓   
+┌───────┐   
+│  Repository  │  ---> Database operations (JDBC)  
+└───┬───┘  
+ㅤㅤuses  
+ㅤㅤㅤ↓    
+┌────────┐   
+│  PostgreSQL  │   ---> Data storage  
+└────────┘
 ### **Request Flow:**
 
 1) Client -> HTTP Request -> Controller
@@ -230,6 +248,7 @@ mvn clean install
 * **GET all cards:** GET http://localhost:8080/api/cards
 
 * **Create card:** POST http://localhost:8080/api/cards
+
 `JSON
 {
 "name": "Knight",
@@ -244,6 +263,7 @@ mvn clean install
 * **Upgrade card:** PUT http://localhost:8080/api/cards/1/upgrade
 
 * **Create player:** POST http://localhost:8080/api/players
+
 `JSON
 {
 "name": "ProGamer123",
@@ -256,11 +276,12 @@ mvn clean install
 
 ## Reflection
 ### What I Learned
-* **Design Patterns:** Factory simplified card creation, Builder improved readability, Singleton managed shared resources
-* **SOLID Principles:** Made code modular and testable - each class has clear responsibility
-* **Spring Boot:** Dependency injection eliminated boilerplate, made testing easier
-* **REST API Design:** Proper HTTP methods and status codes improve API clarity
+1. [x] **Design Patterns:** Factory simplified card creation, Builder improved readability, Singleton managed shared resources
+2. [x] **SOLID Principles:** Made code modular and testable - each class has clear responsibility
+3. [x] **Spring Boot:** Dependency injection eliminated boilerplate, made testing easier
+4. [x] **REST API Design:** Proper HTTP methods and status codes improve API clarity
 ### Challenges
+* Watching and reading lectures
 * Creating generic CrudRepository<T> for different entity types
 * Managing polymorphism in CardFactory with database mapping
 * Understanding Spring Boot dependency injection vs manual object creation
@@ -270,8 +291,3 @@ mvn clean install
 * After: Layered architecture, easy to extend and test
 * Can add new card types without modifying existing code (OCP)
 * Easy to unit test each layer independently (DIP)
-### Future Improvements
-* Add unit tests with JUnit + Mockito
-* Implement JWT authentication
-* Add Swagger API documentation
-* Dockerize application

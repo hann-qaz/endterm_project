@@ -31,15 +31,15 @@ public class DeckBuilder {
 
     public DeckBuilder addCard(Card card) {
         if (cards.size() >= 8) {
-            throw new IllegalStateException("Deck cannot have more than 8 cards");
+            throw new IllegalStateException("Deck can't have more than 8 cards");
         }
         this.cards.add(card);
         return this;
     }
 
     public DeckBuilder cards(List<Card> cards) {
-        if (cards.size() > 8) {
-            throw new IllegalStateException("Deck cannot have more than 8 cards");
+        if (cards.size() != 8) {
+            throw new IllegalStateException("Deck must have 8 cards");
         }
         this.cards = new ArrayList<>(cards);
         return this;
@@ -47,7 +47,7 @@ public class DeckBuilder {
 
     public Deck build() throws InvalidInputException {
         if (deckName == null || deckName.isEmpty()) {
-            throw new IllegalStateException("Deck name is required");
+            throw new IllegalStateException("Deck name can't be null or empty");
         }
 
         Deck deck = new Deck(id, deckName);

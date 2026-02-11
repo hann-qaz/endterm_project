@@ -12,23 +12,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * REPOSITORY LAYER - Database operations for cards
- * Demonstrates:
- *   - DIP: Implements CrudRepository<Card> interface
- *   - SRP: Only handles database operations, no business logic
- *   - Polymorphism: Handles different card types (Warrior, Spell, Building)
- *   - Spring Integration: Uses @Repository and DataSource
- */
+//demonstrates 1)SRP: do only database operations, no business logic
+// 2)DIP: implemet interface
+// 3)Polymorphism: uses Warrior, Spell, Building card types
+// 4)Spring Integration: uses @Repository and DataSource
+
 @Repository
 public class CardRepository implements CrudRepository<Card> {
 
     private final DataSource dataSource;
 
-    /**
-     * Constructor injection - Spring automatically injects DataSource
-     * DataSource is configured in application.properties
-     */
+
     @Autowired
     public CardRepository(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -48,7 +42,7 @@ public class CardRepository implements CrudRepository<Card> {
             stmt.setInt(4, card.getElixirCost());
             stmt.setInt(5, card.getLevel());
 
-            // POLYMORPHISM: Set card-specific attributes based on actual type
+            // POLYMORPHISM: Set specific attributes based on card type
             if (card instanceof WarriorCard) {
                 WarriorCard warrior = (WarriorCard) card;
                 stmt.setInt(6, warrior.getDamage());
@@ -67,12 +61,6 @@ public class CardRepository implements CrudRepository<Card> {
                 stmt.setInt(7, building.getHp());
                 stmt.setInt(8, 0);  // No radius
                 stmt.setInt(9, building.getLifetime());
-            } else {
-                // Default values if unknown type
-                stmt.setInt(6, 0);
-                stmt.setInt(7, 0);
-                stmt.setInt(8, 0);
-                stmt.setInt(9, 0);
             }
 
             stmt.executeUpdate();
@@ -141,7 +129,7 @@ public class CardRepository implements CrudRepository<Card> {
             stmt.setInt(4, card.getElixirCost());
             stmt.setInt(5, card.getLevel());
 
-            // POLYMORPHISM: Handle different card types
+            // polymorphism: Handle different card types
             if (card instanceof WarriorCard) {
                 WarriorCard warrior = (WarriorCard) card;
                 stmt.setInt(6, warrior.getDamage());
@@ -191,13 +179,9 @@ public class CardRepository implements CrudRepository<Card> {
         }
     }
 
-    /**
-     * ADDITIONAL METHOD: Get cards by type
-     * Demonstrates extension of base CRUD operations
-     */
     public List<Card> getByType(String type) throws DatabaseException {
         List<Card> cards = new ArrayList<>();
-        String sql = "SELECT * FROM cards WHERE UPPER(card_type) = UPPER(?) ORDER BY level DESC";
+        String sql = "SELECT * FROM cards WHERE (card_type) = (?) ORDER BY name DESC";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -215,9 +199,6 @@ public class CardRepository implements CrudRepository<Card> {
         return cards;
     }
 
-    /**
-     * ADDITIONAL METHOD: Get cards by rarity
-     */
     public List<Card> getByRarity(String rarity) throws DatabaseException {
         List<Card> cards = new ArrayList<>();
         String sql = "SELECT * FROM cards WHERE UPPER(rarity) = UPPER(?) ORDER BY level DESC";
@@ -238,10 +219,8 @@ public class CardRepository implements CrudRepository<Card> {
         return cards;
     }
 
-    /**
-     * Helper method to map ResultSet to appropriate Card subclass
-     * Demonstrates FACTORY PATTERN logic and POLYMORPHISM
-     */
+    //method to map ResultSet to appropriate Card subclass.  demonstrates factory and polymorphism
+
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");
@@ -254,40 +233,19 @@ public class CardRepository implements CrudRepository<Card> {
         int radius = rs.getInt("radius");
         int lifetime = rs.getInt("lifetime");
 
-        // POLYMORPHISM: Create appropriate subclass based on card type
+        // polymorphism Create appropriate subclass based on card type
         Card card;
 
-        if ("WARRIOR".equalsIgnoreCase(cardType)) {
+        if ("WARRIOR".equals(cardType)) {
             card = new WarriorCard(id, name, rarity, elixirCost, level, hp, damage);
-        } else if ("SPELL".equalsIgnoreCase(cardType) || "Spell".equalsIgnoreCase(cardType)) {
+        } else if ("SPELL".equalsIgnoreCase(cardType)) {
             card = new SpellCard(id, name, rarity, elixirCost, level, radius, damage);
-        } else if ("BUILDING".equalsIgnoreCase(cardType) || "Building".equalsIgnoreCase(cardType)) {
+        } else if ("BUILDING".equalsIgnoreCase(cardType)) {
             card = new BuildingCard(id, name, rarity, elixirCost, level, hp, lifetime);
         } else {
-            throw new SQLException("Unknown card type: " + cardType);
+            throw new SQLException("Wrong card type: " + cardType);
         }
 
         return card;
-    }
-
-    /**
-     * Override default count() method for better performance
-     * Uses SQL COUNT instead of fetching all records
-     */
-    @Override
-    public int count() throws DatabaseException {
-        String sql = "SELECT COUNT(*) FROM cards";
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-            return 0;
-        } catch (SQLException e) {
-            throw new DatabaseException("Failed to count cards: " + e.getMessage(), e);
-        }
     }
 }

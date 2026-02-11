@@ -55,9 +55,7 @@ public class PlayerBuilder {
         return player;
     }
 
-    /**
-     * Static factory method for fluent API
-     */
+     //Static factory method for fluent API
     public static PlayerBuilder builder() {
         return new PlayerBuilder();
     }
