@@ -94,6 +94,7 @@ POST /api/players
    Purpose: Construct complex objects with optional parameters
    Benefit: Fluent API, readable code 
 
+===============================================================================
 
 ## Component Principles
    ### REP (Reuse/Release Equivalence)
@@ -108,7 +109,9 @@ POST /api/players
    Interfaces separated by concern:
    Validatable, Upgradable, Printable
    No forced dependencies on unused functionality
-   
+
+===============================================================================
+
 ##  SOLID Principles
    ### S - Single Responsibility
    Controller: HTTP handling only
@@ -180,23 +183,6 @@ Decks <-> Cards: Many-to-Many (using deck_cards)
 ===============================================================================
 
 ## System Architecture
-Code
-┌──────────────┐
-│  Controller  │  -> REST endpoints, HTTP handling
-└──────┬───────┘
-↓ depends on
-┌──────────────┐
-│   Service    │  -> Business logic, validation
-└──────┬───────┘
-↓ depends on
-┌──────────────┐
-│  Repository  │  -> Database operations (JDBC)
-└──────┬───────┘
-↓ uses
-┌──────────────┐
-│  PostgreSQL  │  -> Data storage
-└──────────────┘
-
 ### **Request Flow:**
 
 1) Client -> HTTP Request -> Controller
