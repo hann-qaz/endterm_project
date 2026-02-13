@@ -391,7 +391,7 @@ Implementing the cache taught me:
 
 Bonus task taught how Singleton pattern solve problems (shared cache instance) and how SOLID principles keep the solution clean and maintainable.
 
----
+=============================================================================================
 
 ## Reflection
 ### What I Learned
