@@ -25,6 +25,7 @@ public class CardController {
     private final CardServiceInterface cardService;
     private final CardFactory cardFactory;
 
+    //autowired constructor for dependency injection of service and factory
     @Autowired
     public CardController(CardServiceInterface cardService, CardFactory cardFactory) {
         this.cardService = cardService;
@@ -74,7 +75,6 @@ public class CardController {
     }
 
      // PUT /api/cards/{id} - update card
-
     @PutMapping("/{id}")
     public ResponseEntity<CardResponse> updateCard(
             @PathVariable int id,
@@ -135,4 +135,6 @@ public class CardController {
 
         return ResponseEntity.ok(response);
     }
+
+
 }

